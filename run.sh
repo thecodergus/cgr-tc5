@@ -9,11 +9,13 @@ if ! pip3 show meson &> /dev/null; then
     source ~/.bashrc
 fi
 
+
 NOME_PROJETO="main" # Nome do projeto
 
 # Configurações
 export CC=gcc # Escolhendo o compilador
 export CMAKE_PREFIX_PATH="/opt/vcpkg"
+
 export ninja=./ninja
 
 PASTA="build"

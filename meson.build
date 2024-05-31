@@ -1,34 +1,65 @@
-# Projeto de exemplo para uso do GenICam com C
-project('Aplicação', 'c')
+# Projeto de exemplo para uso do GenICam com C++ e Python
+project('Aplicação', 'cpp', default_options : ['cpp_std=c++20'])
 
 # Inicia as flags de compilação como um vetor vazio
-c_args = []
+cpp_args = []
 
 # Adiciona flags de compilação para o GCC e Clang
-cc = meson.get_compiler('c')
-if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
- c_args += '-Wno-deprecated'
+cc = meson.get_compiler('cpp')
+if cc.get_id() == 'g++' or cc.get_id() == 'clang++'
+  cpp_args += '-Wno-deprecated'
 endif
 
-# Importa as pastas de cabeçalho
+# Importa as dependências e pastas de cabeçalho
 inc = include_directories('include', '/usr/local/include')
 
 # Importa os arquivos de código fonte
 app_src = files(
- 'src/main.c'
+ 'src/main.cpp',
+ 'src/App.cpp',
+ 'src/Camera.cpp',
+ 'src/Color.cpp',
+ 'src/Coordinate2D.cpp',
+ 'src/Coordinate3D.cpp',
+ 'src/Helpers.cpp',
+ 'src/Object.cpp',
+ 'src/Shapes.cpp',
+ 'src/Utils.cpp'
 )
 
 # Local para importar as dependencias
+compiler = meson.get_compiler('cpp')
+
+# Local para importar as dependencias
+openGL_dep = dependency('gl')
+glew_dep = dependency('glew', required: true)
+gluL_dep = dependency('glu')
+glut_dep = dependency('glut', required: false)
+freeimage_dep = dependency('freeimage', required: false)
+
+
+libsPath = '/usr/lib/x86_64-linux-gnu/'
+if not glut_dep.found()
+  glut_dep = compiler.find_library('glut', dirs: libsPath)
+endif
+
+if not freeimage_dep.found()
+  freeimage_dep = compiler.find_library('freeimage', dirs: libsPath)
+endif
 
 # Aplicação Central
-executable('main',
-   sources : [
-     app_src
-   ],
-   include_directories : inc,
-   dependencies: [
-
-   ],
-   install: true,
-   c_args : c_args
- )
+executable('main', 
+    sources : [
+      app_src
+    ], 
+    include_directories : inc, 
+    dependencies: [
+      openGL_dep, 
+      glew_dep,
+      glut_dep, 
+      gluL_dep, 
+      freeimage_dep
+    ],
+    install: true, 
+    cpp_args : cpp_args
+  )

@@ -11,7 +11,7 @@ if cc.get_id() == 'g++' or cc.get_id() == 'clang++'
 endif
 
 # Importa as dependências e pastas de cabeçalho
-inc = include_directories('include', '/usr/local/include')
+inc = include_directories('include', '/usr/local/include', 'libs/freeimage')
 
 # Importa os arquivos de código fonte
 app_src = files(
@@ -32,7 +32,7 @@ compiler = meson.get_compiler('cpp')
 
 # Local para importar as dependencias
 openGL_dep = dependency('gl')
-glew_dep = dependency('glew', required: true)
+# glew_dep = dependency('glew', required: true)
 gluL_dep = dependency('glu')
 glut_dep = dependency('glut', required: false)
 freeimage_dep = dependency('freeimage', required: false)
@@ -44,7 +44,8 @@ if not glut_dep.found()
 endif
 
 if not freeimage_dep.found()
-  freeimage_dep = compiler.find_library('freeimage', dirs: libsPath)
+  path = meson.current_source_dir() + '/libs/freeimage/libfreeimage.a'
+  freeimage_dep = declare_dependency(link_args: path)
 endif
 
 # Aplicação Central

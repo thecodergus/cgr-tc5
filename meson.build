@@ -32,7 +32,6 @@ compiler = meson.get_compiler('cpp')
 
 # Local para importar as dependencias
 openGL_dep = dependency('gl')
-# glew_dep = dependency('glew', required: true)
 gluL_dep = dependency('glu')
 glut_dep = dependency('glut', required: false)
 freeimage_dep = dependency('freeimage', required: false)
@@ -56,7 +55,6 @@ executable('main',
     include_directories : inc, 
     dependencies: [
       openGL_dep, 
-      glew_dep,
       glut_dep, 
       gluL_dep, 
       freeimage_dep
